@@ -1,13 +1,7 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -19,11 +13,11 @@ import {
 
 import {
   Colors,
-  DebugInstructions,
   Header,
-  LearnMoreLinks,
-  ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import * as Unimp from 'react-native-unimp';
+
+const appid = '__UNI__ADD10A8';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -62,6 +56,26 @@ function App(): React.JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  const [path, setPath] = React.useState<string | undefined>();
+
+  React.useEffect(() => {
+    // 初始化小程序
+    Unimp.initialize(
+      { isEnableBackground: false, capsule: true },
+      { backgroundColor: '#1991FB' }
+    )
+      .then(async () => {
+        const isInitialize = await Unimp.isInitialize();
+        if (isInitialize) {
+          console.debug('[小程序初始化]: 成功');
+          Unimp.getAppBasePath(appid).then(_path => {
+            setPath(_path);
+          });
+        }
+      })
+      .catch((e) => console.debug(`[小程序初始化]: 失败：${e.message}`));
+  }, []);
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
@@ -77,19 +91,17 @@ function App(): React.JSX.Element {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
+            调用 <Text style={styles.highlight}>initialize()</Text> 初始化小程序.
           </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
+          <Section title="See Unimp Path">
+            获取小程序路径 <Text style={styles.highlight}>{path}</Text> 以便检查程序资源是否释放.
           </Section>
-          <Section title="Debug">
-            <DebugInstructions />
+          <Section title="Open">
+            调用 <Text style={styles.highlight}>openUniMP()</Text> 打开小程序.
           </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+          <View style={styles.button}>
+            <Button title="打开小程序" onPress={() => Unimp.openUniMP(appid)} />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -112,6 +124,9 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700',
+  },
+  button: {
+    margin: 25,
   },
 });
 
