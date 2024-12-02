@@ -60,10 +60,7 @@ function App(): React.JSX.Element {
 
   React.useEffect(() => {
     // 初始化小程序
-    Unimp.initialize(
-      { isEnableBackground: false, capsule: true },
-      { backgroundColor: '#1991FB' }
-    )
+    Unimp.initialize({ isEnableBackground: false, capsule: true })
       .then(async () => {
         const isInitialize = await Unimp.isInitialize();
         if (isInitialize) {
@@ -91,10 +88,12 @@ function App(): React.JSX.Element {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           <Section title="Step One">
-            调用 <Text style={styles.highlight}>initialize()</Text> 初始化小程序.
+            调用 <Text style={styles.highlight}>initialize()</Text>{' '}
+            初始化小程序.
           </Section>
           <Section title="See Unimp Path">
-            获取小程序路径 <Text style={styles.highlight}>{path}</Text> 以便检查程序资源是否释放.
+            获取小程序路径 <Text style={styles.highlight}>{path}</Text>{' '}
+            以便检查程序资源是否释放.
           </Section>
           <Section title="Open">
             调用 <Text style={styles.highlight}>openUniMP()</Text> 打开小程序.
